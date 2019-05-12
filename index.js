@@ -22,8 +22,9 @@ async function sendMail(req) {
         <p>${req.body.message}</p>
       `;
     let transporter = nodemailer.createTransport({
-      host: "smtp.gmail.email",
-      port: 587,
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
       auth: {
         // user: "alfonso.haley@ethereal.email",
         // pass: "PPsHTaT4WMkDzdhZhR"
