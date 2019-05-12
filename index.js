@@ -27,19 +27,23 @@ async function sendMail(req) {
       auth: {
         // user: "alfonso.haley@ethereal.email",
         // pass: "PPsHTaT4WMkDzdhZhR"
-        user: "madarsasadiqulislam@gmail.com",
+        user: "shariqrough@gmail.com",
         pass: "Pakistan123@"
       }
     });
 
-    let info = await transporter.sendMail({
-      from: `${req.body.name} <${req.body.email}>`, // sender address
-      to: "madarsasadiqulislam@gmail.com", // list of receivers
-      replyTo: req.body.email,
-      subject: "New Message", // Subject line
-      text: req.body.message, // plain text body
-      html: htmlEmail // html body
-    });
+    try {
+      let info = await transporter.sendMail({
+        from: `${req.body.name} <${req.body.email}>`, // sender address
+        to: "shariqrough@gmail.com", // list of receivers
+        replyTo: req.body.email,
+        subject: "New Message", // Subject line
+        text: req.body.message, // plain text body
+        html: htmlEmail // html body
+      });
+    } catch (err) {
+      console.log(err);
+    }
 
     transporter.sendMail(info, (err, infor) => {
       if (err) {
