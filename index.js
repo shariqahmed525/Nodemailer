@@ -25,17 +25,17 @@ async function sendMail(req) {
       host: "smtp.ethereal.email",
       port: 587,
       auth: {
-        // user: "alfonso.haley@ethereal.email",
-        // pass: "PPsHTaT4WMkDzdhZhR"
-        user: "shariqrough@gmail.com",
-        pass: "Pakistan123@"
+        user: "alfonso.haley@ethereal.email",
+        pass: "PPsHTaT4WMkDzdhZhR"
+        // user: "shariqrough@gmail.com",
+        // pass: "Pakistan123@"
       }
     });
 
     try {
       let info = await transporter.sendMail({
         from: `${req.body.name} <${req.body.email}>`, // sender address
-        to: "shariqrough@gmail.com", // list of receivers
+        to: "alfonso.haley@ethereal.email", // list of receivers
         replyTo: req.body.email,
         subject: "New Message", // Subject line
         text: req.body.message, // plain text body
