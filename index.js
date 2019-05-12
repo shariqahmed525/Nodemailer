@@ -41,18 +41,18 @@ async function sendMail(req) {
         text: req.body.message, // plain text body
         html: htmlEmail // html body
       });
+
+      transporter.sendMail(info, (err, infor) => {
+        if (err) {
+          return console.log(err);
+        }
+
+        console.log("Message sent %s", infor.messageId);
+        console.log("Message url %s", nodemailer.getTestMessageUrl(infor));
+      });
     } catch (err) {
       console.log(err);
     }
-
-    transporter.sendMail(info, (err, infor) => {
-      if (err) {
-        return console.log(err);
-      }
-
-      console.log("Message sent %s", infor.messageId);
-      console.log("Message url %s", nodemailer.getTestMessageUrl(infor));
-    });
   });
 }
 
