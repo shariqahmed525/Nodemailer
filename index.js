@@ -22,12 +22,13 @@ async function sendMail(req) {
         <p>${req.body.message}</p>
       `;
     let transporter = nodemailer.createTransport({
-      host: "smtp.ethereal.email",
+      host: "smtp.gmail.email",
       port: 587,
       auth: {
         // user: "alfonso.haley@ethereal.email",
         // pass: "PPsHTaT4WMkDzdhZhR"
-        user: "info@sadiqulislam.net",
+        // user: "info@sadiqulislam.net",
+        user: "madarsasadiqulislam@gmail.com",
         pass: "Pakistan123@"
       }
     });
@@ -35,7 +36,7 @@ async function sendMail(req) {
     try {
       let info = await transporter.sendMail({
         from: `${req.body.name} <${req.body.email}>`, // sender address
-        to: "info@sadiqulislam.net", // list of receivers
+        to: "madarsasadiqulislam@gmail.com", // list of receivers
         replyTo: req.body.email,
         subject: "New Message", // Subject line
         text: req.body.message, // plain text body
