@@ -7,22 +7,23 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use("/", (req, res) => {
+  console.log(req.body);
   sendMail(req);
 });
 
 async function sendMail(req) {
   var transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
+    host: "mail.sadiqulislam.net",
     port: 465,
     secure: true,
     auth: {
-      user: "madarsasadiqulislam@gmail.com",
+      user: "info@sadiqulislam.net",
       pass: "Pakistan123@"
     }
   });
 
   var mailOptions = {
-    from: '"Madarsa Sadiq ul Islam"<madarsasadiqulislam@gmail.com>',
+    from: '"Madarsa Sadiq ul Islam"<info@sadiqulislam.net>',
     to: req.body.email,
     subject: "Thanks for using Plai!",
     html: `
