@@ -1,42 +1,48 @@
+"use strict";
+require('dotenv').config();
 const express = require("express");
-const bodyParser = require("body-parser");
 const nodemailer = require("nodemailer");
+
 const app = express();
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+// Body middleware
+app.use(express.json());
 
-app.use("/", (req, res) => {
-  console.log(req.body);
-  sendMail(req);
+app.use("/", (req) => {
+  const { email, name, message } = req.body;
+  sendMail(email, name, message);
 });
 
-async function sendMail(req) {
+async function sendMail(email, name, message) {
   var transporter = nodemailer.createTransport({
-    host: "mail.sadiqulislam.net",
+    host: "smtp.gmail.com",
+    tls: 587,
     port: 465,
-    secure: true,
+    service: "Gmail",
     auth: {
-      user: "info@sadiqulislam.net",
-      pass: "Pakistan123@"
-    }
+      user: "your email",
+      pass: "your password"
+    },
   });
 
-  var mailOptions = {
-    from: '"Madarsa Sadiq ul Islam"<info@sadiqulislam.net>',
-    to: req.body.email,
-    subject: "Thanks for using Plai!",
-    html: `
-        <h3>Contact Details</h3>
-        <ul>
-            <li>Name: ${req.body.name}</li>
-            <li>Email: ${req.body.email}</li>
-        </ul>
+  var html = `
         <h3>Message</h3>
-        <p>${req.body.message}</p>`
+        <p>${message}</p>
+      `;
+
+  var mailOptions = {
+    from: {
+      name,
+      address: email
+    },
+    to: "realisticcleaning1@gmail.com",
+    subject: name,
+    html: html,
+    replyTo: email,
+    sender: email,
   };
   return new Promise((resolve, reject) => {
-    transporter.sendMail(mailOptions, function(error, info) {
+    transporter.sendMail(mailOptions, function (error, info) {
       if (error) {
         console.log("rejected: ", error);
         reject(error);
@@ -46,55 +52,11 @@ async function sendMail(req) {
       }
     });
   });
-  // nodemailer.createTestAccount(async (err, account) => {
-  //   const htmlEmail = `
-  //       <h3>Contact Details</h3>
-  //       <ul>
-  //           <li>Name: ${req.body.name}</li>
-  //           <li>Email: ${req.body.email}</li>
-  //       </ul>
-  //       <h3>Message</h3>
-  //       <p>${req.body.message}</p>
-  //     `;
-  //   let transporter = nodemailer.createTransport({
-  //     host: "smtp.gmail.com",
-  //     port: 465,
-  //     secure: true,
-  //     auth: {
-  //       // user: "alfonso.haley@ethereal.email",
-  //       // pass: "PPsHTaT4WMkDzdhZhR"
-  //       // user: "info@sadiqulislam.net",
-  //       user: "madarsasadiqulislam@gmail.com",
-  //       pass: "Pakistan123@"
-  //     }
-  //   });
-
-  //   try {
-  //     let info = await transporter.sendMail({
-  //       from: `${req.body.name} <${req.body.email}>`, // sender address
-  //       to: "madarsasadiqulislam@gmail.com", // list of receivers
-  //       replyTo: req.body.email,
-  //       subject: "New Message", // Subject line
-  //       text: req.body.message, // plain text body
-  //       html: htmlEmail // html body
-  //     });
-
-  //     transporter.sendMail(info, (err, infor) => {
-  //       if (err) {
-  //         return console.log(err);
-  //       }
-
-  //       console.log("Message sent %s", infor.messageId);
-  //       console.log("Message url %s", nodemailer.getTestMessageUrl(infor));
-  //     });
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // });
 }
 
-const PORT = process.env.PORT || 3003;
 
-app.listen(PORT, () => {
-  console.log(`server listening on port ${PORT}`);
-});
+// define Port
+const port = process.env.PORT || 5000;
+
+// port listen
+app.listen(port, () => console.log(`Server started on port ${port}`));
