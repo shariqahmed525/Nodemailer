@@ -2,26 +2,54 @@
 require('dotenv').config();
 const express = require("express");
 const nodemailer = require("nodemailer");
-
+const bodyParser = require("body-parser");
 const app = express();
 
 // Body middleware
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 app.use(express.json());
 
-app.use("/", (req) => {
-  const { email, name, message } = req.body;
-  sendMail(email, name, message);
+app.use(function (_, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
 });
 
-async function sendMail(email, name, message) {
+app.use("/", (req, res) => {
+  sendMail(req.body, res);
+});
+
+async function sendMail({ email, name, subject, message }, res) {
+  console.log('name ===> ', name);
+  console.log('email ===> ', email);
+  console.log('subject ===> ', subject);
+  console.log('message ===> ', message);
   var transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    tls: 587,
+    // Gmail Configuration
+    // host: "smtp.gmail.com",
+    // tls: 587,
+    // port: 465,
+    // service: "Gmail",
+    // auth: {
+    //   user: "email address",
+    //   pass: "password"
+    // },
+
+    // GoDaddy Configuration
+    // host: "smtp.office365.com",
+    host: "smtpout.secureserver.net",
+    secure: true,
+    secureConnection: false, // TLS requires secureConnection to be false
+    tls: {
+      ciphers: 'SSLv3'
+    },
+    requireTLS: true,
     port: 465,
-    service: "Gmail",
+    debug: true,
     auth: {
-      user: "your email",
-      pass: "your password"
+      user: "email address",
+      pass: "password"
     },
   });
 
@@ -35,8 +63,8 @@ async function sendMail(email, name, message) {
       name,
       address: email
     },
-    to: "realisticcleaning1@gmail.com",
-    subject: name,
+    to: "info@realisticcleaning.com",
+    subject: subject,
     html: html,
     replyTo: email,
     sender: email,
@@ -48,6 +76,7 @@ async function sendMail(email, name, message) {
         reject(error);
       } else {
         console.log("Email sent: " + info.response);
+        res.json({ message: `Email sent: ${info.response}` })
         resolve(info.response);
       }
     });
